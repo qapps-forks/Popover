@@ -65,8 +65,8 @@ open class PopoverView: UIView {
             }
         }
         var width: CGFloat = maxLengthTitle.size(font: CellLabelFont, preferredMaxLayoutWidth: CGFloat.greatestFiniteMagnitude).width
-        if width < 260 {
-            width = 260
+        if width < 160 {
+            width = 160
         }
 
         width += Leading * 2
