@@ -109,15 +109,20 @@ open class PopoverView: UIView {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
-
-        if nil != arrawView.layer.contents {
+    
+        if arrawView.layer.contents != nil {
             return
         }
-
+    
         let color = items[0].coverColor ?? UIColor.white
         let arrawCenterX: CGFloat = fromView.frame.midX - arrawView.frame.midX + arrawView.bounds.midX
         let bounds = arrawView.bounds
-        DispatchQueue.global().async { () -> Void in
+    
+        // Determine whether the arrow should be flipped (pointing up or down)
+        let shouldFlipArrow = (direction == .up)
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
             let image = drawArrawImage(
                 in: bounds,
                 strokeColor: color,
@@ -127,13 +132,13 @@ open class PopoverView: UIView {
                 arrawWidth: 10,
                 arrawHeight: 10,
                 cornerRadius: CornerRadius,
-                handstand: self.reverseHorizontalCoordinates
+                handstand: shouldFlipArrow // Flip arrow based on direction
             )
-            DispatchQueue.main.async(execute: { () -> Void in
+            DispatchQueue.main.async {
                 self.arrawView.image = image
-            })
+            }
         }
-
+    
         tableView.scrollToRow(at: IndexPath(row: initialIndex, section: 0), at: .top, animated: false)
     }
 
